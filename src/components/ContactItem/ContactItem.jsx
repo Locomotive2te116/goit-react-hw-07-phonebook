@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './ContactItem.module.css';
 import { useDispatch } from 'react-redux';
-import { deleteContact } from '../../store/phonebookSlice.js';
+import { deleteContactThunk } from '../../store/operations.js';
 
 export const ContactItem = ({ name, number, id }) => {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export const ContactItem = ({ name, number, id }) => {
       <button
         className={s.contactsBtn}
         type="button"
-        onClick={() => dispatch(deleteContact(id))}
+        onClick={() => dispatch(deleteContactThunk(id))}
       >
         Delete
       </button>

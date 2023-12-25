@@ -1,41 +1,49 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
+//import { nanoid } from 'nanoid';
+import {
+  addContactsThunk,
+  deleteContactThunk,
+  fetchContactsThunk,
+} from './operations';
+const initialState = {
+  contacts: {
+    items: [],
+    isLoading: false,
+    error: null,
+  },
+  filter: '',
+};
 
 export const phonebookSlice = createSlice({
   name: 'phonebook',
-  initialState: {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  },
+  initialState,
   reducers: {
-    deleteContact: (state, { payload }) => {
-      state.contacts = state.contacts.filter(contact => contact.id !== payload);
-    },
     setFilter: (state, { payload }) => {
       state.filter = payload;
     },
-    addContact: {
-      prepare: ({ name, number }) => {
-        return {
-          payload: {
-            id: nanoid(5),
-            name,
-            number,
-          },
-        };
-      },
-      reducer: (state, { payload }) => {
-        state.contacts.push(payload);
-      },
-    },
+  },
+
+  extraReducers: builder => {
+    builder
+      .addCase(fetchContactsThunk.fulfilled, (state, { payload }) => {
+        state.items = payload;
+        state.isLoading = false;
+      })
+      .addCase(deleteContactThunk.fulfilled, (state, { payload }) => {
+        state.items = state.items.filter(item => item.id !== payload.id);
+      })
+      .addCase(addContactsThunk.fulfilled, (state, { payload }) => {
+        state.items.push(payload);
+      })
+      .addCase(fetchContactsThunk.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(fetchContactsThunk.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      });
   },
 });
 
-export const { deleteContact, setFilter, addContact } = phonebookSlice.actions;
-
-export default phonebookSlice.reducer;
+export const contactsReducer = phonebookSlice.reducer;
+export const { setFilter } = phonebookSlice.actions;
