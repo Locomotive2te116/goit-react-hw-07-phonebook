@@ -26,21 +26,23 @@ export const phonebookSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchContactsThunk.fulfilled, (state, { payload }) => {
-        state.items = payload;
-        state.isLoading = false;
+        state.contacts.items = payload;
+        state.contacts.isLoading = false;
       })
       .addCase(deleteContactThunk.fulfilled, (state, { payload }) => {
-        state.items = state.items.filter(item => item.id !== payload.id);
+        state.contacts.items = state.contacts.items.filter(
+          item => item.id !== payload.id
+        );
       })
       .addCase(addContactsThunk.fulfilled, (state, { payload }) => {
-        state.items.push(payload);
+        state.contacts.items.push(payload);
       })
       .addCase(fetchContactsThunk.pending, state => {
-        state.isLoading = true;
+        state.contacts.isLoading = true;
       })
       .addCase(fetchContactsThunk.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        state.error = payload;
+        state.contacts.isLoading = false;
+        state.contacts.error = payload;
       });
   },
 });
