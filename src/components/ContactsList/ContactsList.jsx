@@ -16,8 +16,7 @@ const ContactsList = ({ children }) => {
   const filteredContacts = contacts?.filter(contact =>
     contact.name.toLowerCase().includes(filter?.toLowerCase() || '')
   );
-  console.log(contacts);
-  console.log(filteredContacts);
+
   return (
     <>
       {children}
